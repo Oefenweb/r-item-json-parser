@@ -8,7 +8,6 @@
 #' content <- questionJsonParser(question)$content
 #' type <- questionJsonParser(question)$mediaType
 #' @export
-
 questionJsonParser <- function(question) {
   questionParsed <- rjson::fromJSON(as.character(question))$question
   return(list(content = questionParsed$content,

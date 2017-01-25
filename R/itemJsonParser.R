@@ -4,10 +4,9 @@
 #' answer options vector.
 #' @return Input item dataframe or vector without JSON format.
 #' @export
-
 itemJsonParser <- function(items) {
 
-  # Boolian initialization
+  # Boolean initialization
   dfBo <- FALSE
   correctAnsIndex <- FALSE
 

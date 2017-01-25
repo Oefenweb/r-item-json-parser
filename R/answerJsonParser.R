@@ -7,7 +7,6 @@
 #'                    "maximizedTextAnswerOptions\",\"answerOptions\":[\"0\"]}")
 #' options <- answerJsonParser(answerOption)
 #' @export
-
 answerJsonParser <- function(answerOption) {
   answerOptionParsed <- rjson::fromJSON(answerOption)
   if (length(answerOptionParsed$answerOptions) == 1 |
