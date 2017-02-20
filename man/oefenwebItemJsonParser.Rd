@@ -7,9 +7,13 @@
 \title{oefenwebItemJsonParser: A package to remove JSON format}
 \description{
 The oefenwebItemJsonParser package provides functionality to remove JSON format
-from Oefenweb items. The parser can be applied to a full dataset of items to
-remove JSON format from the item questions and item answer options. In addition,
-JSON can also be removed from only the questions or only the answer options.
+from Oefenweb items with the itemJsonParser function. The parser can be applied
+to a full dataset of items to remove JSON format from the item questions and item
+ answer options. In addition, JSON can also be removed from only the questions
+ or only the answer options with the itemJsonParser. The functions questionJsonParser and
+ answerJsonParser are normally not needed as itemJsonParser can remove the JSON.
+ The questionJsonParser is only important in situation in which mediaType or other
+ JSON parameter are necessary.
 }
 \section{oefenwebItemJsonParser functions}{
  The oefenwebItemJsonParser package

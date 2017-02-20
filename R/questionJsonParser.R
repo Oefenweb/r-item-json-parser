@@ -9,6 +9,12 @@
 #' type <- questionJsonParser(question)$mediaType
 #' @export
 questionJsonParser <- function(question) {
+  # return quesiton if it does not contain JSON
+  if (!(TRUE %in% grepl("jsonTypeDefinition", question)
+        | TRUE %in% grepl("maximizedTextAnswerOptions", question)
+        | TRUE %in% grepl("answerOptions", question))) {
+    return(question)
+  }
   questionParsed <- rjson::fromJSON(as.character(question))$question
   return(list(content = questionParsed$content,
               mediaType = questionParsed$mediaType))

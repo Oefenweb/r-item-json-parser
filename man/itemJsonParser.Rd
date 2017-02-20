@@ -4,16 +4,24 @@
 \alias{itemJsonParser}
 \title{Removes JSON format from item datafile.}
 \usage{
-itemJsonParser(items)
+itemJsonParser(items, withFeedback = FALSE)
 }
 \arguments{
 \item{items}{A Oefenweb item dataframe or a Oefenweb item question or Ofenweb
 answer options vector.}
+
+\item{withFeedback}{Some games (as "meten") contain feedback in the question structure.
+If withFeedback is TRUE, an extra feedback column is added to the output data.frame.}
 }
 \value{
 Input item dataframe or vector without JSON format.
 }
 \description{
 Removes JSON format from item datafile.
+}
+\examples{
+question <- paste0('{"jsonTypeDefinition":"gameSelector","type":"OpenAnswer",',
+                   '"question":{"mediaType":"maximizedText","content":"0 x 1"}}')
+questionWithoutJSON <- itemJsonParser(question)
 }
 
