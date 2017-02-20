@@ -8,6 +8,12 @@
 #' options <- answerJsonParser(answerOption)
 #' @export
 answerJsonParser <- function(answerOption) {
+  # return quesiton if it does not contain JSON
+  if (!(TRUE %in% grepl("jsonTypeDefinition", answerOption)
+        | TRUE %in% grepl("maximizedTextAnswerOptions", answerOption)
+        | TRUE %in% grepl("answerOptions", answerOption))) {
+    return(answerOption)
+  }
   answerOptionParsed <- rjson::fromJSON(answerOption)
   if (length(answerOptionParsed$answerOptions) == 1 |
       class(answerOptionParsed$answerOptions) == "character") {

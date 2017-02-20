@@ -2,9 +2,16 @@
 #'
 #' @param items A Oefenweb item dataframe or a Oefenweb item question or Ofenweb
 #' answer options vector.
+#' @param withFeedback Some games (as "meten") contain feedback in the question structure.
+#'  If withFeedback is TRUE, an extra feedback column is added to the output data.frame.
+#' @examples
+#' question <- paste0('{"jsonTypeDefinition":"gameSelector","type":"OpenAnswer",',
+#'                    '"question":{"mediaType":"maximizedText","content":"0 x 1"}}')
+#' questionWithoutJSON <- itemJsonParser(question)
 #' @return Input item dataframe or vector without JSON format.
 #' @export
-itemJsonParser <- function(items) {
+itemJsonParser <- function(items,
+                           withFeedback = FALSE) {
 
   # Boolean initialization
   dfBo <- FALSE
@@ -54,8 +61,14 @@ itemJsonParser <- function(items) {
   ansVec <- as.numeric()
   corVec <- as.numeric()
   typeVec <- as.numeric()
+  feedbackVec <- as.numeric()
   # Loop through strings to transform them
   for (i in 1:dim(transVec)[1]) {
+    if (!is.na(transVec$trans[i]) & grepl("jsonTypeDefinition", transVec$trans[i])) {
+      jsonTypes <- names(rjson::fromJSON(transVec$trans[i]))
+    } else {
+      jsonTypes <- ""
+    }
     if (grepl("jsonTypeDefinition", transVec$trans[i]) &
         grepl("question", transVec$trans[i])) {
       questContent <- questionJsonParser(transVec$trans[i])$content
@@ -65,6 +78,16 @@ itemJsonParser <- function(items) {
         questContent <- questContent[[grep("Content", names(questContent))]]
       } else if (any(grepl("Text", names(questContent)))) {
         questContent <- questContent[[grep("Text", names(questContent))]]
+      } else if (mode(questContent) == "list") {
+        content <- questContent[[1]]
+        if (length(questContent) > 1) {
+          if ("imageContent" %in% names(questContent[[2]])) {
+            secContent <- questContent[[2]]$imageContent
+          } else {
+            secContent <- questContent[[2]][1]
+          }
+        }
+        questContent <- paste0(content, " (", secContent, ")")
       }
 
       questVec <- c(questVec, questContent)
@@ -97,19 +120,25 @@ itemJsonParser <- function(items) {
         }
       }
     }
+    if ("feedback" %in% jsonTypes) {
+      feedbackVec <- c(feedbackVec,
+                       rjson::fromJSON(transVec$trans[i])$feedback$content)
+    }
   }
 
   # for regenvolgorde, replace \times, \space and $
   if (length(questVec) > 0) {
     for (i in 1:length(questVec)) {
-      if (typeVec[i] == "mathLatex") {
-        Q <- questVec[i]
-        if (grepl("\\\\space", Q) | # nolint
-            grepl("\\\\times", Q) |# nolint
-            grepl("\\$", Q)) {
-          questVec[i] <- gsub("\\$", "",
-                              gsub("\\\\times", "x", # nolint
-                                   gsub("\\\\space", " ", Q))) # nolint
+      if (!is.na(typeVec[i])) {
+        if (typeVec[i] == "mathLatex") {
+          Q <- questVec[i]
+          if (grepl("\\\\space", Q) | # nolint
+              grepl("\\\\times", Q) |# nolint
+              grepl("\\$", Q)) {
+            questVec[i] <- gsub("\\$", "",
+                                gsub("\\\\times", "x", # nolint
+                                     gsub("\\\\space", " ", Q))) # nolint
+          }
         }
       }
     }
@@ -121,6 +150,9 @@ itemJsonParser <- function(items) {
     items$answer_options <- ansVec
     if (length(corVec) & correctAnsIndex) {
       items$correct_answer <- corVec
+    }
+    if (withFeedback & length(feedbackVec) == nrow(items)) {
+      items$feedback <- feedbackVec
     }
     return(items)
   } else {
