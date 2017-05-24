@@ -6,6 +6,7 @@
 #' answerOption <- paste0("{\"layout\":\"Numpad\",\"mediaType\":\"",
 #'                    "maximizedTextAnswerOptions\",\"answerOptions\":[\"0\"]}")
 #' options <- answerJsonParser(answerOption)
+#' @importFrom rjson fromJSON
 #' @export
 answerJsonParser <- function(answerOption) {
   # return quesiton if it does not contain JSON

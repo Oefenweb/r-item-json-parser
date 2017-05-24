@@ -21,4 +21,3 @@ question <- paste0('{"jsonTypeDefinition":"gameSelector","type":"OpenAnswer",',
 content <- questionJsonParser(question)$content
 type <- questionJsonParser(question)$mediaType
 }
-

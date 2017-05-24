@@ -24,4 +24,3 @@ question <- paste0('{"jsonTypeDefinition":"gameSelector","type":"OpenAnswer",',
                    '"question":{"mediaType":"maximizedText","content":"0 x 1"}}')
 questionWithoutJSON <- itemJsonParser(question)
 }
-

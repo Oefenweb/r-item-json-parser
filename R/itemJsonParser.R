@@ -9,6 +9,8 @@
 #'                    '"question":{"mediaType":"maximizedText","content":"0 x 1"}}')
 #' questionWithoutJSON <- itemJsonParser(question)
 #' @return Input item dataframe or vector without JSON format.
+#' @importFrom RJSONIO toJSON
+#' @importFrom rjson fromJSON
 #' @export
 itemJsonParser <- function(items,
                            withFeedback = FALSE) {
@@ -65,7 +67,14 @@ itemJsonParser <- function(items,
   # Loop through strings to transform them
   for (i in 1:dim(transVec)[1]) {
     if (!is.na(transVec$trans[i]) & grepl("jsonTypeDefinition", transVec$trans[i])) {
-      jsonTypes <- names(rjson::fromJSON(transVec$trans[i]))
+      # because rjson fails on shaper domain id 56
+      jsonTypes <- tryCatch({
+          names(rjson::fromJSON(transVec$trans[i]))
+        },
+        error = function(cond) {
+          # Choose a return value in case of error
+          return(names(RJSONIO::fromJSON(transVec$trans[i])))
+        })
     } else {
       jsonTypes <- ""
     }

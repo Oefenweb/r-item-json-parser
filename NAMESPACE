@@ -3,3 +3,5 @@
 export(answerJsonParser)
 export(itemJsonParser)
 export(questionJsonParser)
+importFrom(RJSONIO,toJSON)
+importFrom(rjson,fromJSON)
