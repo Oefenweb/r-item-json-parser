@@ -97,6 +97,11 @@ itemJsonParser <- function(items,
           }
         }
         questContent <- paste0(content, " (", secContent, ")")
+        if ("spokenText" %in% as.character(sapply(questionJsonParser(transVec$trans[i])$content,
+                                                  function(x) names(x)))) {
+          questContent <- paste(sapply(questionJsonParser(transVec$trans[i])$content,
+                                       function(x) x[["spokenText"]]), collapse = " - ")
+        }
       }
 
       questVec <- c(questVec, questContent)
