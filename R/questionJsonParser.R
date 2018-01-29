@@ -24,6 +24,14 @@ questionJsonParser <- function(question) {
     # Choose a return value in case of error
     return(RJSONIO::fromJSON(as.character(question), simplify = FALSE)$question)
   })
-  return(list(content = questionParsed$content,
-              mediaType = questionParsed$mediaType))
+  if ("introduction" %in% names(questionParsed)) {
+    # check if questions have introduction
+    return(list(content = paste0(questionParsed$introduction,
+                                 " ",
+                                 questionParsed$content),
+                mediaType = questionParsed$mediaType))
+  } else {
+    return(list(content = questionParsed$content,
+                mediaType = questionParsed$mediaType))
+  }
 }
