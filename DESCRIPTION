@@ -11,6 +11,7 @@ BugReports: https://github.com/Oefenweb/r-item-json-parser/issues
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true
+Remotes:
 Imports:
     RJSONIO (>= 1.3.0),
     rjson (>= 0.2.15),
